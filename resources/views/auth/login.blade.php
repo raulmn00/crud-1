@@ -18,9 +18,15 @@
                         <h3 class="card-title mb-0">Login</h3>
                     </div>
                     <div class="card-body">
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
                         <form method="POST" action="{{ route('login.submit') }}">
                             @csrf
-
+                            @method('POST')
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control @error('email') is-invalid @enderror"

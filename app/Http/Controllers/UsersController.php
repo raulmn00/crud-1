@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -18,16 +19,20 @@ class UsersController extends Controller
       'password' => 'required|min:6|confirmed'
     ]);
 
-    User::create([
+    // Usar Hash::make para garantir compatibilidade com Auth::attempt
+    $user = User::create([
       'name' => $request->name,
       'email' => $request->email,
-      'password' => bcrypt($request->password),
+      'password' => Hash::make($request->password),
       'secure_id' => (string) Str::uuid()
     ]);
 
+    // Opcional: Faça login automaticamente após o registro
+    // Auth::login($user);
+
     return redirect()
       ->route('login')
-      ->with('success', 'Conta criada com sucesso!');
+      ->with('success', 'Conta criada com sucesso! Faça login para continuar.');
   }
 
   public function passwordRequest(Request $request)
